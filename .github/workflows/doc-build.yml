@@ -1,0 +1,16 @@
+name: doc-build
+
+on: [push, pull_request]
+
+jobs:
+    doc_build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: ./.github/actions/latex
+              with:
+                  args: latexmk -cd -pdf -interaction=nonstopmode -file-line-error main.tex
+            - uses: actions/upload-artifact@v3
+              with:
+                  name: Seminar Paper
+                  path: main.pdf
