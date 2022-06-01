@@ -24,6 +24,7 @@
 \usepackage{makeidx}
 \usepackage{listings}
 \usepackage[style=iso-numeric,minnames=1,maxnames=3,giveninits,uniquename=init]{biblatex}
+\usepackage[record,stylemods=mcols,style=mcolindexgroup,toc=false]{glossaries-extra}
 \usepackage{amsmath}
 \usepackage[section]{placeins}
 \usepackage{amssymb}
@@ -50,6 +51,11 @@
   positioning,
   shapes.geometric,
 }
+
+\setabbreviationstyle[acronym]{long-short}
+\GlsXtrLoadResources[group={Abbreviations},src={./abbreviations},sort={de-DE},type={main}]
+\GlsXtrLoadResources[group={Acronyms},src={./acronyms},sort={de-DE},type={main}]
+\renewcommand*{\glstreegroupheaderfmt}[1]{\textbf{\Large #1}}
 
 %% set menukeys style
 \renewmenumacro{\directory}[>]{pathswithblackfolder}
@@ -144,6 +150,7 @@
 %% enable if these lists should be shown on their own page
 \listoftables
 \listoffigures
+\printunsrtglossary[type=main]
 
 %% main
 \mainmatter{}
