@@ -5,6 +5,32 @@ Dieses Kapitel behandelt die Funktionsweise und potenzielle Angriffe auf \gls{rk
 
 \section{Funktionsprinzip}
 
+Bei \gls{rke} Systemen sendet der Schlüssel bei Betätigung eines Tasters auf dem Gehäuse ein kodiertes Funksignal an das Fahrzeug. Die Reichweite beträgt je nach Modell einige \SIrange{10}{100}{\meter}. Für die Funkübertragung kommen für gewöhnlich die lizenzfreien \gls{ism} Bänder infrage (EU\@: \SIlist{433;868}{\mega\hertz}, USA\@: \SI{315}{\mega\hertz}).
+
+Die einfachsten Varianten von \gls{rke} setzen auf unidirektionale Kommunikation mittels statischer Codes (sog.\@ \foreignlanguage{english}{Fixed Codes}). \Cref{fig:fixed_code_msc} zeigt das Nachrichtenablaufdiagramm dieses Verfahrens. Unter Verzicht auf jegliche kryptografische Sicherheit, sendet der Schlüssel bei Aktivierung hierbei eine feste Bit-Folge, die einer Funktion \(f \in {\{\mathrm{open}, \mathrm{close}\}}\) und Schlüsselkennung \(\mathit{id}\) zugehörig ist~\cite{Alrabady2005}. In~\cite{Garcia2016} konnten solche Systeme bei Modellen aus dem Baujahr 2000 ausfindig gemacht werden.
+
+\begin{figure}
+    \centering
+    \begin{sequencediagram}
+        \tikzstyle{inststyle}+=[text depth=0.35ex, inner sep=0.25cm]
+        \newthread{user}{Nutzer}
+        \newinst{key}{Schlüssel}
+        \newinst{car}{Fahrzeug}
+
+        \begin{call}{user}{betätige}{key}{}
+            \begin{messcall}{key}{\({\{\mathit{id}, f\}}\)}{car}
+                \begin{callself}{car}{prüfe Code}{}
+                \end{callself}
+                \begin{sdblock}{Wenn}{Code Korrekt?}
+                    \begin{callself}{car}{öffne Türen}{}
+                    \end{callself}
+                \end{sdblock}
+            \end{messcall}
+        \end{call}
+    \end{sequencediagram}
+    \caption{Nachrichtenablaufdiagramm von \foreignlanguage{english}{Fixed Code} \glsentryshort{rke}.\label{fig:fixed_code_msc}}
+\end{figure}
+
 \begin{figure}
     \centering
     \begin{tikzpicture}[
@@ -40,7 +66,7 @@ Dieses Kapitel behandelt die Funktionsweise und potenzielle Angriffe auf \gls{rk
         \node [extern label, below=2 of immo_antenna] {Fahrzeug Wgfsp. (\SI{125}{\kilo\hertz})};
 
         \draw [decorate, decoration={expanding waves, angle=20, segment length=0.15cm}] ($(rke_antenna) + (0, 1)$) -- ($(rke_antenna) + (0, 2)$);
-        \node [extern label, above=2 of rke_antenna.center] {Fahrzeug RKE (\SIlist[list-units=single,list-separator=/, list-final-separator=/]{433;315;868}{\mega\hertz})};
+        \node [extern label, above=2 of rke_antenna.center] {Fahrzeug RKE (\SIlist[list-separator=/, list-final-separator=/]{433;315;868}{\mega\hertz})};
 
         \begin{scope}[on background layer]
             \node [fill=black!5, rounded corners=0.75cm, fit=(rke_rf)(rke_antenna)(uc)(button)(button_case)(button_label)(immo)(immo_antenna)] (key_housing) {};

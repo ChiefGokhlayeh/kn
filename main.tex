@@ -35,6 +35,7 @@
 \usepackage[record,stylemods=mcols,style=mcolindexgroup,toc=false]{glossaries-extra}
 \usepackage[section]{placeins}
 \usepackage[style=iso-numeric,minnames=1,maxnames=3,giveninits,uniquename=init]{biblatex}
+\usepackage[underline=false]{pgf-umlsd}
 \usepackage{amssymb}
 \usepackage{booktabs}
 \usepackage{hawstyle}
@@ -73,6 +74,10 @@
 \GlsXtrLoadResources[group={Abbreviations},src={./abbreviations},sort={de-DE},type={main}]
 \GlsXtrLoadResources[group={Acronyms},src={./acronyms},sort={de-DE},type={main}]
 \renewcommand*{\glstreegroupheaderfmt}[1]{\textbf{\Large #1}}
+
+\sisetup{
+  list-units=single,
+}
 
 %% set menukeys style
 \renewmenumacro{\directory}[>]{pathswithblackfolder}
