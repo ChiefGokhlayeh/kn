@@ -1,44 +1,56 @@
 \documentclass[
-  draft=false,
-  paper=a4,
-  twoside=false,
-  fontsize=11pt,
-  headsepline,
   BCOR=10mm,
-  DIV=11
+  captions=tableheading,
+  DIV=11,
+  draft=false,
+  fontsize=11pt,
+  headsepline=on,
+  listof=graduated,
+  ngerman,
+  numbers=noenddot,
+  paper=a4,
+  titlepage=on,
+  toc=graduated,
+  twoside=false,
 ]{scrbook}
-\usepackage[ngerman,english]{babel}
-%% see http://www.tex.ac.uk/cgi-bin/texfaq2html?label=uselmfonts
-\usepackage[T1]{fontenc}
+
+% Fixed order packages
 \usepackage[utf8]{inputenc}
-\usepackage{csquotes}
+\usepackage[ngerman,english]{babel}
+\usepackage[babel]{csquotes}
+\usepackage{amsmath}
+\usepackage[ngerman,hidelinks]{hyperref}
+\usepackage[ngerman]{cleveref}
+
+% Font packages
+\usepackage[T1]{fontenc}
 \usepackage{libertine}
 \usepackage{pifont}
-\usepackage{microtype}
-\usepackage{booktabs}
-\usepackage{subcaption}
 \usepackage{textcomp}
+
+% Miscellaneous packages
+\usepackage[binary-units,locale=DE]{siunitx}
 \usepackage[german,refpage]{nomencl}
-\usepackage{setspace}
-\usepackage[locale=DE]{siunitx}
-\usepackage{makeidx}
-\usepackage{listings}
-\usepackage[style=iso-numeric,minnames=1,maxnames=3,giveninits,uniquename=init]{biblatex}
-\usepackage[record,stylemods=mcols,style=mcolindexgroup,toc=false]{glossaries-extra}
-\usepackage{amsmath}
-\usepackage[section]{placeins}
-\usepackage{amssymb}
-\usepackage[ngerman,colorlinks=true]{hyperref}
-\usepackage[ngerman]{cleveref}
-\usepackage{nameref}
-\usepackage{menukeys}
-\usepackage{soul}
-\usepackage{hawstyle}
-\usepackage{lipsum} %% for sample text
-\usepackage{scrhack}
-\usepackage{xspace}
-\usepackage{tikz}
 \usepackage[nooldvoltagedirection]{circuitikz}
+\usepackage[record,stylemods=mcols,style=mcolindexgroup,toc=false]{glossaries-extra}
+\usepackage[section]{placeins}
+\usepackage[style=iso-numeric,minnames=1,maxnames=3,giveninits,uniquename=init]{biblatex}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{hawstyle}
+\usepackage{lipsum}
+\usepackage{listings}
+\usepackage{makeidx}
+\usepackage{menukeys}
+\usepackage{microtype}
+\usepackage{nameref}
+\usepackage{pagecolor}
+\usepackage{scrhack}
+\usepackage{setspace}
+\usepackage{soul}
+\usepackage{subcaption}
+\usepackage{tikz}
+\usepackage{xspace}
 
 %% add bib files
 \addbibresource{references.bib}
@@ -135,10 +147,11 @@
 %% customize (see readme.pdf for supported values)
 \HAWThesisProperties{
   Author={Andreas Baulig},
-  Title={Keyless-Entry Systeme im Automotive-Bereich},
-  ThesisType={Seminararbeit},
+  EnglishTitle={Keyless-Entry Systems in Automotive},
+  ReleaseDate={19. Juni 2022},
   ThesisExperts={Dr.\@ Aining Li},
-  ReleaseDate={19. Juni 2022}
+  ThesisType={Seminararbeit},
+  Title={Keyless-Entry Systeme im Automotive-Bereich},
 }
 
 %% title
