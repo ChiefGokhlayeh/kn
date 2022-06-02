@@ -1,6 +1,54 @@
 % !TeX root = ../main.tex
 \chapter{\glsentrylong{rke}}
 
+Dieses Kapitel behandelt die Funktionsweise und potenzielle Angriffe auf \gls{rke} Systeme. Zunächst wird eine kurze Historie zu verschiedenen Funktionsansätzen gegeben, um anschließend näher auf das in aktuellen Fahrzeugen weit verbreitete Hitag2 einzugehen. Schließlich wird zu jedem erläuterten Verfahren eine Reihe von Angriffen vorgestellt.
+
 \section{Funktionsprinzip}
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}[
+            block/.style={
+                    draw,
+                    thick,
+                    text depth=0.35ex,
+                    inner sep=0.25cm,
+                    font=\scriptsize,
+                },
+            extern label/.style={
+                    font=\tiny,
+                },
+            node distance=0.4cm,
+        ]
+        \node [block] (rke_rf) {RKE RF};
+        \node [bareantenna, left=of rke_rf.north west, yshift=0.2cm] (rke_antenna) {};
+        \node [block, below=of rke_rf] (uc) {µC};
+        \node [draw=gray, very thick, fill=black, circle, right=of uc] (button) {};
+        \node [draw, fit=(button)] (button_case) {};
+        \node [extern label, right=0 of button_case] (button_label) {Knopf};
+        \node [block, below=of uc] (immo) {Wgfsp. RFID};
+        \node [bareantenna, left=of immo.north west, yshift=0.2cm] (immo_antenna) {};
+
+        \draw (immo_antenna) |- (immo);
+        \draw [dotted] (immo) -- (uc) node [extern label, anchor=west, midway] {optional};
+        \draw (button_case) -- (uc);
+        \draw (rke_rf) -- (uc);
+        \draw (rke_antenna) |- (rke_rf);
+
+        \draw [decorate, decoration={expanding waves, angle=20, segment length=0.15cm}] ($(immo_antenna) - (0.35, 1)$) -- ($(immo_antenna) - (0.35, 2)$);
+        \draw [decorate, decoration={expanding waves, angle=20, segment length=0.15cm}] ($(immo_antenna) - (-0.35, 2)$) -- ($(immo_antenna) - (-0.35, 1)$);
+        \node [extern label, below=2 of immo_antenna] {Fahrzeug Wgfsp. (\SI{125}{\kilo\hertz})};
+
+        \draw [decorate, decoration={expanding waves, angle=20, segment length=0.15cm}] ($(rke_antenna) + (0, 1)$) -- ($(rke_antenna) + (0, 2)$);
+        \node [extern label, above=2 of rke_antenna.center] {Fahrzeug RKE (\SIlist[list-units=single,list-separator=/, list-final-separator=/]{433;315;868}{\mega\hertz})};
+
+        \begin{scope}[on background layer]
+            \node [fill=black!5, rounded corners=0.75cm, fit=(rke_rf)(rke_antenna)(uc)(button)(button_case)(button_label)(immo)(immo_antenna)] (key_housing) {};
+            \path [fill=black!5] ($(key_housing.east) + (-0.1, 0.5)$) -- ++(5, 0) -- ++(0, -0.9) -- ++(-5, 0);
+            \path [fill=black!12] ($(key_housing.east) + (4.9, 0.4)$) -- ++(-0.4, 0) -- ++(-0.2, -0.2) -- ++(-0.4, 0) -- ++(-0.1, 0.1) -- ++(-0.4, 0) -- ++(-0.1, 0.1) -- ++(-0.4, 0) -- ++(-0.2, -0.2) -- ++(-0.4, 0) -- ++(-0.2, 0.2) -- ++(-0.4, 0) -- ++(-0.2, -0.2) -- ++(-0.4, 0) -- ++(-0.2, 0.2) -- ++(-0.8, 0) -- ++(0, -0.45) -- ++(0.25, -0.25) -- ++(4.55, 0) node [midway, anchor=north, extern label] {mechanischer Schlüssel};
+        \end{scope}
+    \end{tikzpicture}
+    \caption[Aufbau eines typischen \foreignlanguage{english}{rolling-code} \glsentryshort{rke} Schlüssels mit unidirektionaler Kommunikation.]{Aufbau eines typischen \foreignlanguage{english}{rolling-code} \glsentryshort{rke} Schlüssels mit unidirektionaler Kommunikation~\cite{Garcia2016}.}
+\end{figure}
 
 \section{Bedrohungen}
