@@ -31,6 +31,36 @@ Die einfachsten Varianten von \gls{rke} setzen auf unidirektionale Kommunikation
     \caption{Nachrichtenablaufdiagramm von \foreignlanguage{english}{Fixed Code} \glsentryshort{rke}.\label{fig:fixed_code_msc}}
 \end{figure}
 
+Ein neueres Verfahren, gezeigt in \cref{fig:rolling_code_msc}, setzt auf sogenannte \foreignlanguage{english}{Rolling Codes}. Hierbei wird statt einem festen Wert, ein fortlaufender Zähler übertragen. Sowohl Sender als auch Empfänger verwalten einen solchen Zähler. Der Zählerwert sowie die gewünschte Funktion \(f\) werden vor der Übertragung üblicherweise nach einem symmetrischen Verfahren \(m(c, f)\) verschlüsselt. Nach jeder Übertragung wird der Zähler \(c_{\mathrm{key}}\) im Sender inkrementiert, sodass idealerweise nie der gleiche Zählerwert zweimal gesendet wird. Empfängt ein Fahrzeug einen solchen Code, wird dieser zunächst mittels \(m^{-1}(c, f)\) entschlüsselt. Anschließend wird der Fahrzeug-eigene Zählerwert \(c_{\mathrm{car}}\) vom Empfangenen abgezogen. Liegt der Wert unterhalb einer Toleranzschwelle \(\delta \), ist die Authentifizierung erfolgreich. Ist der Wert darüber, verweigert das Fahrzeug den Zugang.
+
+\begin{figure}
+    \centering
+    \begin{sequencediagram}
+        \tikzstyle{inststyle}+=[text depth=0.35ex, inner sep=0.25cm]
+        \newthread{user}{Nutzer}
+        \newinst{key}{Schlüssel}
+        \newinst{car}{Fahrzeug}
+
+        \begin{call}{user}{betätige}{key}{}
+            \begin{messcall}{key}{\(m(c_{\mathrm{key}}, f)\)}{car}
+                \begin{callself}{car}{\(m^{-1}(c_{\mathrm{key}}, f) \mapsto (c_{\mathrm{key}}, f)\)}{}
+                \end{callself}
+                \begin{sdblock}{Wenn}{\(c_{\mathrm{key}} - c_{\mathrm{car}} < \delta \)}
+                    \begin{callself}{car}{öffne Türen}{}
+                    \end{callself}
+                    \begin{callself}{car}{\(c_{\mathrm{car}} \coloneqq c_{\mathrm{key}}\)}{}
+                    \end{callself}
+                \end{sdblock}
+            \end{messcall}
+            \begin{callself}{key}{\(c_{\mathrm{key}} \coloneqq c_{\mathrm{key}} + 1\)}{}
+            \end{callself}
+        \end{call}
+    \end{sequencediagram}
+    \caption{Nachrichtenablaufdiagramm von \foreignlanguage{english}{Rolling Code} \glsentryshort{rke}.\label{fig:rolling_code_msc}}
+\end{figure}
+
+Sofern die Authentifizierung geglückt ist, synchronisieren sich beide Parteien wieder auf einen gemeinsamen Zählerwert. Der Toleranzwert ist notwendig, da ein Schlüssel eventuell auch außerhalb der Reichweite des Fahrzeuges aktiviert wird. Folglich ist es jedoch auch möglich, dass Schlüssel und Fahrzeug bei wiederholter Aktivierung außerhalb der Funkreichweite die Synchronisierung verlieren und keine Authentifizierung mittels \gls{rke} mehr möglich ist. In solchen Fällen muss das Fahrzeug mechanisch aufgeschlossen werden. Eine (Re\discretionary{-)}{}{)}Synchronisierung findet über einen Seitenkanal statt. % chktex 9 chktex 10
+
 \begin{figure}
     \centering
     \begin{tikzpicture}[
