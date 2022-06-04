@@ -7,7 +7,7 @@ Dieses Kapitel behandelt die Funktionsweise und potenzielle Angriffe auf \gls{rk
 
 Bei \gls{rke} Systemen sendet der Schlüssel bei Betätigung eines Tasters auf dem Gehäuse ein kodiertes Funksignal an das Fahrzeug. Die Reichweite beträgt je nach Modell einige \SIrange{10}{100}{\meter}. Für die Funkübertragung kommen für gewöhnlich die lizenzfreien \gls{ism} Bänder infrage (EU\@: \SIlist{433;868}{\mega\hertz}, USA\@: \SI{315}{\mega\hertz}).
 
-Die einfachsten Varianten von \gls{rke} setzen auf unidirektionale Kommunikation mittels statischer Codes (sog.\@ \foreignlanguage{english}{Fixed Codes}). \Cref{fig:fixed_code_msc} zeigt das Nachrichtenablaufdiagramm dieses Verfahrens. Unter Verzicht auf jegliche kryptografische Sicherheit, sendet der Schlüssel bei Aktivierung hierbei eine feste Bit-Folge, die einer Funktion \(f \in {\{\mathrm{open}, \mathrm{close}\}}\) und Schlüsselkennung \(\mathit{id}\) zugehörig ist~\cite{Alrabady2005}. In~\cite{Garcia2016} konnten solche Systeme bei Modellen aus dem Baujahr 2000 ausfindig gemacht werden.
+Die einfachsten Varianten von \gls{rke} setzen auf unidirektionale Kommunikation mittels statischer Codes (sog.\@ \foreignlanguage{english}{Fixed Codes}). \Cref{fig:fixed_code_msc} zeigt das Nachrichtenablaufdiagramm dieses Verfahrens. Unter Verzicht auf jegliche kryptografische Sicherheit, sendet der Schlüssel bei Aktivierung hierbei eine feste Bit-Folge, die einer Funktion \(b \in {\{\mathrm{open}, \mathrm{close}\}}\) und Schlüsselkennung \(\mathit{id}\) zugehörig ist~\cite{Alrabady2005}. In~\cite{Garcia2016} konnten solche Systeme bei Modellen aus dem Baujahr 2000 ausfindig gemacht werden.
 
 \begin{figure}
     \centering
@@ -31,7 +31,7 @@ Die einfachsten Varianten von \gls{rke} setzen auf unidirektionale Kommunikation
     \caption{Nachrichtenablaufdiagramm von \foreignlanguage{english}{Fixed Code} \glsentryshort{rke}.\label{fig:fixed_code_msc}}
 \end{figure}
 
-Ein neueres Verfahren, gezeigt in \cref{fig:rolling_code_msc}, setzt auf sogenannte \foreignlanguage{english}{Rolling Codes}~\cite{Alrabady2005}. Hierbei wird statt einem festen Wert, ein fortlaufender Zähler übertragen. Sowohl Sender als auch Empfänger verwalten einen solchen Zähler. Der Zählerwert sowie die gewünschte Funktion \(f\) werden in moderneren Systemen vor der Übertragung üblicherweise nach einem symmetrischen Verfahren \(m(c, f)\) verschlüsselt~\cite{Garcia2016}. Nach jeder Übertragung wird der Zähler \(c_{\mathrm{key}}\) im Sender inkrementiert, sodass idealerweise nie der gleiche Zählerwert zweimal gesendet wird. Empfängt ein Fahrzeug einen solchen Code, wird dieser zunächst mittels \(m^{-1}(c, f)\) entschlüsselt. Anschließend wird der Fahrzeug-eigene Zählerwert \(c_{\mathrm{car}}\) vom Empfangenen abgezogen. Liegt der Wert unterhalb einer Toleranzschwelle \(\delta \), ist die Authentifizierung erfolgreich. Ist der Wert darüber, verweigert das Fahrzeug den Zugang.
+Ein neueres Verfahren, gezeigt in \cref{fig:rolling_code_msc}, setzt auf sogenannte \foreignlanguage{english}{Rolling Codes}~\cite{Alrabady2005}. Hierbei wird statt einem festen Wert, ein fortlaufender Zähler übertragen. Sowohl Sender als auch Empfänger verwalten einen solchen Zähler. Der Zählerwert sowie die gewünschte Funktion \(b\) werden in moderneren Systemen vor der Übertragung üblicherweise nach einem symmetrischen Verfahren \(m(c, b)\) verschlüsselt~\cite{Garcia2016}. Nach jeder Übertragung wird der Zähler \(c_{\mathrm{key}}\) im Sender inkrementiert, sodass idealerweise nie der gleiche Zählerwert zweimal gesendet wird. Empfängt ein Fahrzeug einen solchen Code, wird dieser zunächst mittels \(m^{-1}(c, b)\) entschlüsselt. Anschließend wird der Fahrzeug-eigene Zählerwert \(c_{\mathrm{car}}\) vom Empfangenen abgezogen. Liegt der Wert unterhalb einer Toleranzschwelle \(\delta \), ist die Authentifizierung erfolgreich. Ist der Wert darüber, verweigert das Fahrzeug den Zugang.
 
 \begin{figure}
     \centering
@@ -42,8 +42,8 @@ Ein neueres Verfahren, gezeigt in \cref{fig:rolling_code_msc}, setzt auf sogenan
         \newinst{car}{Fahrzeug}
 
         \begin{call}{user}{betätige}{key}{}
-            \begin{messcall}{key}{\(m(c_{\mathrm{key}}, f)\)}{car}
-                \begin{callself}{car}{\(m^{-1}(c_{\mathrm{key}}, f) \mapsto (c_{\mathrm{key}}, f)\)}{}
+            \begin{messcall}{key}{\(m(c_{\mathrm{key}}, b)\)}{car}
+                \begin{callself}{car}{\(m^{-1}(c_{\mathrm{key}}, b) \mapsto (c_{\mathrm{key}}, b)\)}{}
                 \end{callself}
                 \begin{sdblock}{Wenn}{\(c_{\mathrm{key}} - c_{\mathrm{car}} < \delta \)}
                     \begin{callself}{car}{öffne Türen}{}
@@ -106,5 +106,52 @@ Sofern die Authentifizierung geglückt ist, synchronisieren sich beide Parteien 
     \end{tikzpicture}
     \caption[Aufbau eines typischen \foreignlanguage{english}{Rolling Code} \glsentryshort{rke} Schlüssels mit zwei Kommunikationskanälen.]{Aufbau eines typischen \foreignlanguage{english}{Rolling Code} \glsentryshort{rke} Schlüssels mit zwei Kommunikationskanälen~\cite{Garcia2016}.\label{fig:rolling_code_key_components}}
 \end{figure}
+
+Ein Beispiel für kommerzielle \gls{rke} Implementierungen ist das Hitag2 \foreignlanguage{english}{Rolling Code} Protokoll des Herstellers NXP Semiconductors. In~\cite{Garcia2016} wird eine tiefgehende Beschreibung des Protokolls angeführt, welche auf Basis von Rückwärtsentwicklung des Verfahrens erlangt wurde. Nach Angaben der Autoren wird dieses Protokoll von verschiedenen europäischen und US-amerikanischen Herstellern eingesetzt. Das Verfahren besteht aus einer Stream-Chiffre mit \SI{48}{\bit} Schlüssellänge~\cite{Verdult2015}. Es kommt sowohl in der elektronischen Wegfahrsperre als auch \gls{rke} zum Einsatz.
+
+Beschrieben in~\cite{Verdult2015} basiert die Chiffre auf einem \SI{48}{\bit} breiten \gls{lfsr} und einem nicht-linearen Filter \(f\). Mit jedem Takt werden \SI{20}{\bit} des \gls{lfsr} durch den Filter \(f\) geschickt. Dieser bildet die \SI{20}{\bit} auf ein einzelnes \si{\bit} der Chiffrefolge ab. Anschließend schiebt das \gls{lfsr} seinen Inhalt um ein \si{\bit} nach links und erzeugt mittels des Generatorpolynoms die frei werdende \si{\bit} Stelle rechts. Das Generatorpolynom ist gegeben durch
+%
+\begin{equation*}
+    \setlength\arraycolsep{1pt}
+    \begin{array}{c r r l}
+        G(x) & = \left( \right. &   & x^{47} + x^{46} + x^{43} + x^{42}                      \\  % chktex 9
+             &                  & + & x^{41} + x^{30} + x^{26} + x^{23}                      \\
+             &                  & + & x^{22} + x^{16} + x^{8} + x^{7}                        \\
+             &                  & + & {\left. x^{6} + x^{3} + x^{2} + x \right)} \mod{2} {.} % chktex 9
+    \end{array}
+\end{equation*}
+%
+Oder in alternativer Schreibweise, als Feedback-Funktion der Bit-Folge \(x_{n} \in {\{0, 1\}}\):
+%
+\begin{equation*}
+    \setlength\arraycolsep{1pt}
+    \begin{array}{r r l}
+        L(x_{0}, \dots, x_{47}) = &        & x_{0} \oplus x_{2} \oplus x_{3} \oplus x_{6}         \\
+                                  & \oplus & x_{7} \oplus x_{8} \oplus x_{16} \oplus x_{22}       \\
+                                  & \oplus & x_{23} \oplus x_{26} \oplus x_{30} \oplus x_{41}     \\
+                                  & \oplus & x_{42} \oplus x_{43} \oplus x_{46} \oplus x_{47} {,}
+    \end{array}
+\end{equation*}
+%
+mit \(\oplus \) definiert als dem \foreignlanguage{english}{XOR} Operator. Die Filterfunktion \(f\) ist unterteilt in drei Teilfunktionen \(f_{a}\), \(f_{b}\) und \(f_{c}\). Jede Teilfunktion bildet \SI{4}{\bit} auf \SI{1}{\bit} ab, wobei \(f_{a}\) und \(f_{b}\) mehrfach verwendet werden, um insgesamt \SI{20}{\bit} des \gls{lfsr} auf \SI{1}{\bit} der Chiffrefolge abzubilden. Die Filterfunktionen lauten:
+%
+\begin{equation*}
+    \setlength\arraycolsep{1pt}
+    \begin{array}{c r l}
+        f(x_{0}, \dots, x_{47}) & =  f_{c} \left( \right. & f_{a}(x_{2} x_{3} x_{5} x_{6}), f_{b}(x_{8} x_{12} x_{14} x_{15}),      \\ % chktex 9
+                                &                         & f_{b}(x_{17} x_{21} x_{23} x_{26}), f_{b}(x_{28} x_{29} x_{31} x_{33}), \\
+                                &                         & \left. f_{a}(x_{34} x_{43} x_{44} x_{46}) \right) {,}
+    \end{array}
+\end{equation*}
+%
+mit
+%
+\begin{align*}
+    f_{a}(i) & = {(\mathtt{0xA63C})}_{i}         \\
+    f_{b}(i) & = {(\mathtt{0xA770})}_{i}         \\
+    f_{c}(i) & = {(\mathtt{0xD949CBB0})}_{i} {,}
+\end{align*}
+%
+wobei \({(a)}_{i}\) die \(i\)-te Bit-Stelle von \(a\), beginnend mit dem \gls{msb}, und \(x y\) die Verkettung der Bits \(x\) und \(y\) bezeichnet. Dies entspricht der Notation aus~\cite{Garcia2016,Verdult2015}.
 
 \section{Bedrohungen}
