@@ -19,7 +19,7 @@
 \usepackage[ngerman,english]{babel}
 \usepackage[babel]{csquotes}
 \usepackage{amsmath}
-\usepackage[ngerman,hidelinks]{hyperref}
+\usepackage[ngerman,colorlinks=true]{hyperref}
 \usepackage[ngerman]{cleveref}
 
 % Font packages
@@ -52,6 +52,7 @@
 \usepackage{soul}
 \usepackage{subcaption}
 \usepackage{tikz}
+\usepackage{xcolor}
 \usepackage{xspace}
 
 %% add bib files
@@ -71,10 +72,15 @@
   shapes.geometric,
 }
 
+%% name current color for later
+\colorlet{defaultcolor}{.}
+
+%% set up glossary bibs and styles
 \setabbreviationstyle[acronym]{long-short}
 \GlsXtrLoadResources[group={Abbreviations},src={./abbreviations},sort={de-DE},type={main}]
 \GlsXtrLoadResources[group={Acronyms},src={./acronyms},sort={de-DE},type={main}]
 \renewcommand*{\glstreegroupheaderfmt}[1]{\textbf{\Large #1}}
+\renewcommand*{\glstextformat}[1]{\textcolor{defaultcolor}{#1}}
 
 \sisetup{
   list-units=single,
