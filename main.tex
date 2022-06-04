@@ -77,8 +77,10 @@
 
 %% set up glossary bibs and styles
 \setabbreviationstyle[acronym]{long-short}
-\GlsXtrLoadResources[group={Abbreviations},src={./abbreviations},sort={de-DE},type={main}]
-\GlsXtrLoadResources[group={Acronyms},src={./acronyms},sort={de-DE},type={main}]
+\GlsXtrLoadResources[group={abbreviations},src={./abbreviations},sort={de-DE},type={main}]
+\glsxtrsetgrouptitle{abbreviations}{Abkürzungen}
+\GlsXtrLoadResources[group={acronyms},src={./acronyms},sort={de-DE},type={main}]
+\glsxtrsetgrouptitle{acronyms}{Akronyme}
 \renewcommand*{\glstreegroupheaderfmt}[1]{\textbf{\Large #1}}
 \renewcommand*{\glstextformat}[1]{\textcolor{defaultcolor}{#1}}
 
