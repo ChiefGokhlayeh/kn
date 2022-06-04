@@ -82,7 +82,7 @@ Sofern die Authentifizierung geglückt ist, synchronisieren sich beide Parteien 
         \node [draw=gray, very thick, fill=black, circle, right=of uc] (button) {};
         \node [draw, fit=(button)] (button_case) {};
         \node [extern label, right=0 of button_case] (button_label) {Knopf};
-        \node [block, below=of uc] (immo) {Wgfsp. RFID};
+        \node [block, below=of uc] (immo) {\glsentryshort{wgfsp} \glsentryshort{rfid}};
         \node [bareantenna, left=of immo.north west, yshift=0.2cm] (immo_antenna) {};
 
         \draw (immo_antenna) |- (immo);
@@ -93,10 +93,10 @@ Sofern die Authentifizierung geglückt ist, synchronisieren sich beide Parteien 
 
         \draw [decorate, decoration={expanding waves, angle=20, segment length=0.15cm}] ($(immo_antenna) - (0.35, 1)$) -- ($(immo_antenna) - (0.35, 2)$);
         \draw [decorate, decoration={expanding waves, angle=20, segment length=0.15cm}] ($(immo_antenna) - (-0.35, 2)$) -- ($(immo_antenna) - (-0.35, 1)$);
-        \node [extern label, below=2 of immo_antenna] {Fahrzeug Wgfsp. (\SI{125}{\kilo\hertz})};
+        \node [extern label, below=2 of immo_antenna] {Fahrzeug \glsentryshort{wgfsp}. (\SI{125}{\kilo\hertz})};
 
         \draw [decorate, decoration={expanding waves, angle=20, segment length=0.15cm}] ($(rke_antenna) + (0, 1)$) -- ($(rke_antenna) + (0, 2)$);
-        \node [extern label, above=2 of rke_antenna.center] {Fahrzeug RKE (\SIlist[list-separator=/, list-final-separator=/]{433;315;868}{\mega\hertz})};
+        \node [extern label, above=2 of rke_antenna.center] {Fahrzeug \glsentryshort{rke} (\SIlist[list-separator=/, list-final-separator=/]{433;315;868}{\mega\hertz})};
 
         \begin{scope}[on background layer]
             \node [fill=black!5, rounded corners=0.75cm, fit=(rke_rf)(rke_antenna)(uc)(button)(button_case)(button_label)(immo)(immo_antenna)] (key_housing) {};
