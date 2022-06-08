@@ -11,6 +11,55 @@ In einem \gls{pke} System geschieht die Kommunikation mit dem Fahrzeug \emph{pas
 
 \subsection{\foreignlanguage{english}{Challenge \& Response}}
 
+Im \foreignlanguage{english}{Challenge \& Response} Verfahren, gezeigt in \cref{fig:challenge_response_msc}, authentifiziert sich ein Schlüssel gegenüber einem Fahrzeug, indem es eine vom Fahrzeug vorgegebene \emph{Challenge} \(C\) (engl.\@ Herausforderung) beantwortet. Gemäß Kerckhoffs's Prinzip ist der Algorithmus \(h(C, K)\) zur Lösung der \foreignlanguage{english}{Challenge} auch einem potenziellen Angreifer bekannt. Daher verwalten beide Parteien einen gemeinsamen Geheimschlüssel \(K\), der in die Berechnung der \foreignlanguage{english}{Response} \(R_{\mathrm{car}|\mathrm{key}}\) (engl.\@ Antwort) einfließt. Die Berechnung von \(h(C, K)\) wird sowohl vom Schlüssel (dem \emph{Prüfling}) als auch dem Fahrzeug (dem \emph{Prüfer}) durchgeführt. Nur wenn beide Ergebnisse übereinstimmen, gilt die Prüfung als erfolgreich. Da in die \foreignlanguage{english}{Response} normalerweise keinerlei Zusatzinformationen kodiert sind, reicht es meistens aus, für \(h(C, K)\) eine kryptografische Einwegfunktion einzusetzen. Dennoch sind auch vermehrt kryptografische Block-Chiffren in der Praxis anzutreffen~\cite{Wouters2019}.
+
+Da der Schlüssel bedingt durch dessen Formfaktor meist über eine limitierte Batterielaufzeit verfügt, befindet sich dieser üblicherweise in einem energiesparenden Schlafmodus. Um einen potenziell in der Umgebung befindlichen Schlüssel zu wecken, sendet das Fahrzeug periodisch Weckrufe. Sobald ein Weckruf empfangen wird, antwortet der Schlüssel mit seiner Schlüsselkennung \(\mathit{id}\). Wenn diese als zulässige Schlüsselkennung im Fahrzeug hinterlegt ist, initiiert das Fahrzeug eine Prüfung des Schlüssels mittels \foreignlanguage{english}{Challenge \& Response} Verfahren.
+
+\begin{figure}
+    \centering
+    \begin{sequencediagram}
+        \tikzstyle{inststyle}+=[text depth=0.35ex, inner sep=0.25cm]
+        \newthread{car}{Fahrzeug}
+        \tikzstyle{inststyle}+=[below right=-0.85cm and 5cm of car]
+        \newinst{key}{Schlüssel}
+
+        \mess{car}{Hallo?}{key}
+        \postlevel{}
+        \mess{car}{Hallo?}{key}
+        \postlevel{}
+        \begin{messcall}{car}{Hallo?}{key}
+            \begin{messcall}{key}{\({\{\mathit{id}\}}\)}{car}
+            \end{messcall}
+        \end{messcall}
+
+        \begin{callself}{car}{neue \foreignlanguage{english}{Challenge}}{\(C\)}
+        \end{callself}
+
+        \begin{messcall}{car}{\({\{C\}}\)}{key}
+            \begin{callself}{key}{\foreignlanguage{english}{Response} \(h(C, K)\)}{\(R_{\mathrm{key}}\)}
+            \end{callself}
+            \begin{messcall}{key}{\({\{R_{\mathrm{key}}\}}\)}{car}
+            \end{messcall}
+        \end{messcall}
+        \prelevel{}
+        \prelevel{}
+        \prelevel{}
+        \prelevel{}
+        \prelevel{}
+        \begin{callself}{car}{\foreignlanguage{english}{Response} \(h(C, K)\)}{\(R_{\mathrm{car}}\)}
+        \end{callself}
+
+        \postlevel{}
+        \postlevel{}
+        \postlevel{}
+        \begin{sdblock}{Wenn}{\(R_{\mathrm{key}} = R_{\mathrm{car}}\)}
+            \begin{callself}{car}{öffne Türen}{}
+            \end{callself}
+        \end{sdblock}
+    \end{sequencediagram}
+    \caption{Nachrichtenablaufdiagramm von \foreignlanguage{english}{Challenge \& Response} Verfahren.\label{fig:challenge_response_msc}}
+\end{figure}
+
 \subsection{\foreignlanguage{english}{Distance Bounding}}
 
 \section{Bedrohungen}
