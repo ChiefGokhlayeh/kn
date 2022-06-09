@@ -62,4 +62,22 @@ Da der Schlüssel bedingt durch dessen Formfaktor meist über eine limitierte Ba
 
 \subsection{\foreignlanguage{english}{Distance Bounding}}
 
+In~\cite{Alrabady2005} werden verschiedene Angriffsmodelle auf das \foreignlanguage{english}{Challenge \& Response} Verfahren vorgestellt. Aufgrund der fehlenden Nutzerinteraktion in \gls{pke} sind besonders \foreignlanguage{english}{Relay}-Angriffe ein Problem. Dabei wird die eigentlich bewusst auf wenige Meter eingeschränkte Reichweite des Funkkanals durch einen Angreifer überbrückt. Der von~\citeauthor{Alrabady2005} auch als \emph{\foreignlanguage{english}{Two Thieves Attack}} bezeichnete Angriff besteht darin, dass einer der Angreifer die Funksignale am Fahrzeug abgreift und sie an seinen Mittäter mittels anders geartetem Kommunikationskanal zuschickt. Dieser positioniert sich in der unmittelbaren Nähe des Opfers, welches einen \gls{pke} Schlüssel bei sich trägt, und gibt die vom Fahrzeug gesendeten Signale über ein eigenes Funkmodul an den Schlüssel weiter. Gleichermaßen werden auch die Funksignale des Schlüssels über die so entstehende elektronische Brücke zum Fahrzeug geleitet. Als Maßnahme gegen solche Angriffe werden sogenannte \foreignlanguage{english}{Distance Bounding} Protokolle eingesetzt. Diese dienen dazu, dem Authentifizierungsverfahren eine obere Schranke bezüglich der positionellen Ausdehnung zwischen Prüfer und Prüfling zu garantieren.
+
+Ein übliches Mittel um \foreignlanguage{english}{Distance Bounding} umzusetzen ist über die Laufzeit der Signale. Da die Signalausbreitungsgeschwindigkeit (typischerweise die Lichtgeschwindigkeit \(c\)) in den meisten Fällen als bekannt vorausgesetzt werden kann, ist eine Distanzabschätzung über die Latenz \(\tau_{l}\) und Rechenzeit der \foreignlanguage{english}{Response} \(\tau_{d}\) mittels
+%
+\begin{equation*}
+    d = c \cdot \frac{\tau_{l} - \tau_{d}}{2} {,}
+\end{equation*}
+%
+möglich. Beachte den Faktor \sfrac{1}{2}, da \(\tau_{l}\) üblicherweise nur als zwei-Wege Latenz messbar. Sie lässt sich unterteilen in die einfache Signallaufzeit \(\tau_{p}\) und die Rechenzeit \(\tau_{d}\):
+%
+\begin{equation*}
+    \tau_{l} = 2 \tau_{p} + \tau_{d}
+\end{equation*}
+
+Aufgrund der hohen Ausbreitungsgeschwindigkeit sind \foreignlanguage{english}{Distance Bounding} Protokolle sehr Empfindlich gegenüber der für die Generierung der \foreignlanguage{english}{Response} benötigten Rechenzeit. Es gilt, diese Rechenzeit so gering wie möglich zu halten. Daher verzichten die meisten Ansätze auf komplexe kryptografische Funktionen zum Lösen der \foreignlanguage{english}{Challenge}. Stattdessen lassen sie sich grob unterteilen in zwei Ansätze. In beiden Fällen werden die \foreignlanguage{english}{Challenge} Bits einzeln übertragen und umgehend von einem entsprechenden \foreignlanguage{english}{Response} Bit beantwortet. Der Prüfer erzwingt die Quittierung jedes \foreignlanguage{english}{Challenge} Bits bevor er das nächste aussendet. Im ersten Ansatz zur schnellen Errechnung der \foreignlanguage{english}{Response} wird jedes \foreignlanguage{english}{Challenge} Bit mit einem Bit aus einer vorab bestimmten Bit-Folge per \foreignlanguage{english}{XOR} verknüpft~\cite{Brands1994}. Der zweite Ansatz nutzt das \foreignlanguage{english}{Challenge} Bit \(C_{i}\) als einen Index um zwischen zwei möglichen \foreignlanguage{english}{Response} Bits \(R_{i}^{0}\) oder \(R_{i}^{1}\) zu entscheiden~\cite{Hancke2005}.
+
+Andere Verfahren setzen auf Positionsinformationen aus Nebenkanälen~\cite{Wang2019}. Diese kann bspw.\@ durch \gls{gps} ermittelt werden. In der Praxis sind diese jedoch stark von den Empfangsbedingungen am jeweiligen Standort abhängig. So ist es beim Parken in der Tiefgarage aufgrund des schlechten Satellitenempfangs unwahrscheinlich, dass das Fahrzeug eine valide \gls{gps} Position ermitteln kann. Solche Verfahren werden daher hier nicht weiter erläutert.
+
 \section{Bedrohungen}
