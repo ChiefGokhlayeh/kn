@@ -78,6 +78,62 @@ möglich. Beachte den Faktor \sfrac{1}{2}, da \(\tau_{l}\) üblicherweise nur al
 
 Aufgrund der hohen Ausbreitungsgeschwindigkeit sind \foreignlanguage{english}{Distance Bounding} Protokolle sehr Empfindlich gegenüber der für die Generierung der \foreignlanguage{english}{Response} benötigten Rechenzeit. Es gilt, diese Rechenzeit so gering wie möglich zu halten. Daher verzichten die meisten Ansätze auf komplexe kryptografische Funktionen zum Lösen der \foreignlanguage{english}{Challenge}. Stattdessen lassen sie sich grob unterteilen in zwei Ansätze. In beiden Fällen werden die \foreignlanguage{english}{Challenge} Bits einzeln übertragen und umgehend von einem entsprechenden \foreignlanguage{english}{Response} Bit beantwortet. Der Prüfer erzwingt die Quittierung jedes \foreignlanguage{english}{Challenge} Bits bevor er das nächste aussendet. Im ersten Ansatz zur schnellen Errechnung der \foreignlanguage{english}{Response} wird jedes \foreignlanguage{english}{Challenge} Bit mit einem Bit aus einer vorab bestimmten Bit-Folge per \foreignlanguage{english}{XOR} verknüpft~\cite{Brands1994}. Der zweite Ansatz nutzt das \foreignlanguage{english}{Challenge} Bit \(C_{i}\) als einen Index um zwischen zwei möglichen \foreignlanguage{english}{Response} Bits \(R_{i}^{0}\) oder \(R_{i}^{1}\) zu entscheiden~\cite{Hancke2005}.
 
+\Cref{fig:distance_bounding_msc} zeigt ein den Nachrichtenablauf eines \foreignlanguage{english}{Distance Bounding} Protokolls nach \citeauthor{Brands1994}~\cite{Brands1994}. Zunächst legt der Prüfling eine zufällige Bit-Folge \(M_{1, \dots, k}\) fest. Diese hält er zunächst Geheim und gibt nur die gehashte Form \(c(M_{1, \dots, k})\) zusammen mit seiner eigenen Schlüsselkennung \(\mathit{id}\) an den Prüfer weiter. Dieser formuliert daraufhin die zufälligen \foreignlanguage{english}{Challenge} Bits \(C_{1, \dots, k}\). Damit ist der Vorbereitungsteil abgeschlossen. Nun beginnt der zeitkritische Teil des Protokolls in dem der Prüfling so schnell wie möglich auf jedes \(C_{i}\) antworten muss. Zwischen Absenden von \(C_{i}\) und dem Empfang den entsprechenden \foreignlanguage{english}{Response} \(\alpha_{i}^{\mathrm{p}}\) misst der Prüfer die Antwortzeit \(\tau_{l}\). Ist \(\tau_{l} > \tau_{l, \max}\), so befindet sich der Prüfling außerhalb des zulässigen Abstands und die Prüfung ist gescheitert. Nach dem Austausch aller \(k\) \foreignlanguage{english}{Challenge \& Response} Bits verknüpft der Prüfling die \foreignlanguage{english}{Response} Bits mit den Bits der Zusage \(M_{1, \dots, k}\) zu einer \(2k\) langen Bit-Folge. Diese wird durch unter Zunahme des geteilten Geheimschlüssels \(K\) zu einer Signatur \(h(\beta_{1, \dots, 2k}^{\mathrm{p}}, K)\) transformiert und zusammen mit \(M_{1, \dots, k}\) an den Prüfer übertragen. Dieser hat nun alle benötigten Größen, um die Echtheit des Prüflings durch Nachrechnen nachzuprüfen.
+
+\begin{figure}
+    \centering
+    \begin{sequencediagram}
+        \tikzstyle{inststyle}+=[text depth=0.35ex, inner sep=0.25cm]
+        \newthread{prover}{Prüfling}
+        \tikzstyle{inststyle}+=[below right=-0.85cm and 5cm of prover]
+        \newinst{verifier}{Prüfer}
+
+        \begin{callself}{prover}{neue Zusage}{\(M_{1, \dots, k}\)}
+        \end{callself}
+
+        \postlevel{}
+
+        \begin{messcall}{prover}{\( {\{ \mathit{id}, c(M_{1, \dots, k}) \}} \)}{verifier}
+            \begin{callself}{verifier}{neue Challenge}{\(C_{1, \dots, k}\)}
+            \end{callself}
+            \begin{sdblock}{Schneller Bit-Austausch für \(i = 1, \dots, k\)}{}
+                \begin{messcall}{verifier}{\( {\{ C_{i} \}} \)}{prover}
+                    \begin{callself}{prover}{\( C_{i} \oplus M_{i} \)}{\(\alpha_{i}^{\mathrm{p}}\)}
+                    \end{callself}
+                    \begin{messcall}{prover}{\( {\{ \alpha_{i}^{\mathrm{p}} \}} \)}{verifier}
+                    \end{messcall}
+                \end{messcall}
+            \end{sdblock}
+        \end{messcall}
+
+        \begin{callself}{prover}{\(\alpha_{1}^{\mathrm{p}} M_{1} \cdots \alpha_{k}^{\mathrm{p}} M_{k}\)}{\(\beta_{1, \dots, 2k}^{\mathrm{p}}\)}
+        \end{callself}
+
+        \postlevel{}
+
+        \begin{messcall}{prover}{\( {\{ h(\beta_{1, \dots, 2k}^{\mathrm{p}}, K), M_{1, \dots, k} \}}\)}{verifier}
+            \begin{callself}{verifier}{\( C_{1, \dots, k} \oplus M_{1, \dots, k} \)}{\(\alpha_{1, \dots, k}^{\mathrm{v}}\)}
+            \end{callself}
+            \postlevel{}
+            \begin{callself}{verifier}{\(\alpha_{1}^{\mathrm{v}} M_{1} \cdots \alpha_{k}^{\mathrm{v}} M_{k}\)}{\(\beta_{1, \dots, 2k}^{\mathrm{v}}\)}
+            \end{callself}
+            \begin{sdblock}{Wenn}{
+                \shortstack{
+                Zusage \(c(M_{1, \dots, k})\) stimmt, und \\
+                \( \beta_{1, \dots, 2k}^{\mathrm{p}} = \beta_{1, \dots, 2k}^{\mathrm{v}} \), und \\
+                \( h(\beta_{1, \dots, 2k}^{\mathrm{p}}, K) = h(\beta_{1, \dots, 2k}^{\mathrm{v}}, K) \)
+                }
+                }
+                \postlevel{}
+                \postlevel{}
+                \begin{callself}{verifier}{Prüfung bestanden}{}
+                \end{callself}
+            \end{sdblock}
+        \end{messcall}
+    \end{sequencediagram}
+    \caption{\foreignlanguage{english}{Distance Bounding} Protokoll nach \citeauthor{Brands1994}.\label{fig:distance_bounding_msc}}
+\end{figure}
+
 Andere Verfahren setzen auf Positionsinformationen aus Nebenkanälen~\cite{Wang2019}. Diese kann bspw.\@ durch \gls{gps} ermittelt werden. In der Praxis sind diese jedoch stark von den Empfangsbedingungen am jeweiligen Standort abhängig. So ist es beim Parken in der Tiefgarage aufgrund des schlechten Satellitenempfangs unwahrscheinlich, dass das Fahrzeug eine valide \gls{gps} Position ermitteln kann. Solche Verfahren werden daher hier nicht weiter erläutert.
 
 \section{Bedrohungen}
