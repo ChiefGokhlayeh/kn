@@ -1,7 +1,7 @@
 % !TeX root = ../main.tex
 \chapter{\glsentrylong{rke}}
 
-Dieses Kapitel behandelt die Funktionsweise und potenzielle Angriffe auf \gls{rke} Systeme. Zunächst wird eine kurze Historie zu verschiedenen Funktionsansätzen gegeben, um anschließend näher auf das in aktuellen Fahrzeugen weit verbreitete Hitag2 einzugehen. Schließlich wird zu jedem erläuterten Verfahren eine Reihe von Angriffen vorgestellt.
+Dieses Kapitel behandelt die Funktionsweise und potenzielle Angriffe auf \gls{rke} Systeme. Zunächst wird eine kurze Historie zu verschiedenen Funktionsansätzen gegeben, um anschließend näher auf das in aktuellen Fahrzeugmodellen weit verbreitete Hitag2 einzugehen. Schließlich wird zu jedem erläuterten Verfahren eine Reihe von Angriffen vorgestellt.
 
 \section{Funktionsprinzip}
 
@@ -59,7 +59,7 @@ Ein neueres Verfahren, gezeigt in \cref{fig:rolling_code_msc}, setzt auf sogenan
     \caption{Nachrichtenablaufdiagramm von \foreignlanguage{english}{Rolling Code} \glsentryshort{rke}.\label{fig:rolling_code_msc}}
 \end{figure}
 
-Sofern die Authentifizierung geglückt ist, synchronisieren sich beide Parteien wieder auf einen gemeinsamen Zählerwert. Der Toleranzwert ist notwendig, da ein Schlüssel eventuell auch außerhalb der Reichweite des Fahrzeuges aktiviert wird. Folglich ist es jedoch auch möglich, dass Schlüssel und Fahrzeug bei wiederholter Aktivierung außerhalb der Funkreichweite die Synchronisierung verlieren und keine Authentifizierung mittels \gls{rke} mehr möglich ist. In solchen Fällen muss das Fahrzeug mechanisch aufgeschlossen werden. Eine (Re\discretionary{-)}{}{)}Synchronisierung findet über einen Seitenkanal statt. Hierzu wird in einigen Fahrzeugen der Kommunikationskanal der elektronischen \gls{wgfsp} bedient~\cite{Garcia2016}. Diese kommuniziert mit dem Schlüssel beim Einstecken in das Zündschloss über einen niederfrequenten Funkkanal. Solche Schlüssel enthalten also zwei Funkmodule, in \cref{fig:rolling_code_key_components}. Über das \gls{rke} Modul wird der Zugang zum Fahrzeug gesteuert, während das \gls{rfid} Modul zur Kommunikation mit der elektronischen Wegfahrsperre sowie der Zählersynchronisierung dient. % chktex 9 chktex 10
+Sofern die Authentifizierung geglückt ist, synchronisieren sich beide Parteien wieder auf einen gemeinsamen Zählerwert. Der Toleranzwert ist notwendig, da ein Schlüssel eventuell auch außerhalb der Reichweite des Fahrzeuges aktiviert wird. Folglich ist es jedoch auch möglich, dass Schlüssel und Fahrzeug bei wiederholter Aktivierung außerhalb der Funkreichweite die Synchronisierung verlieren und keine Authentifizierung mittels \gls{rke} mehr möglich ist. In solchen Fällen muss das Fahrzeug mechanisch aufgeschlossen werden. Eine (Re\discretionary{-)}{}{)}Synchronisierung findet über einen Seitenkanal statt. Hierzu wird in einigen Fahrzeugen der Kommunikationskanal der elektronischen \gls{wgfsp} bedient~\cite{Garcia2016}. Diese kommuniziert mit dem Schlüssel beim Einstecken in das Zündschloss über einen niederfrequenten Funkkanal. Solche Schlüssel enthalten also mitunter zwei Funkmodule, gezeigt in \cref{fig:rolling_code_key_components}. Über das \gls{rke} Modul wird der Zugang zum Fahrzeug gesteuert, während das \gls{rfid} Modul zur Kommunikation mit der elektronischen Wegfahrsperre sowie der Zählersynchronisierung dient. % chktex 9 chktex 10
 
 \begin{figure}
     \centering
@@ -109,7 +109,7 @@ Sofern die Authentifizierung geglückt ist, synchronisieren sich beide Parteien 
 
 Ein Beispiel für kommerzielle \gls{rke} Implementierungen ist das Hitag2 \foreignlanguage{english}{Rolling Code} Protokoll des Herstellers NXP Semiconductors. In~\cite{Garcia2016} wird eine tiefgehende Beschreibung des Protokolls angeführt, welche auf Basis von Rückwärtsentwicklung des Verfahrens erlangt wurde. Nach Angaben der Autoren wird dieses Protokoll von verschiedenen europäischen und US-amerikanischen Herstellern eingesetzt. Das Verfahren besteht aus einer Stream-Chiffre mit \SI{48}{\bit} Schlüssellänge~\cite{Verdult2015}. Es kommt sowohl in der elektronischen Wegfahrsperre als auch \gls{rke} zum Einsatz.
 
-Beschrieben in~\cite{Verdult2015} basiert die Chiffre auf einem \SI{48}{\bit} breiten \gls{lfsr} und einem nicht-linearen Filter \(f\). Mit jedem Takt werden \SI{20}{\bit} des \gls{lfsr} durch den Filter \(f\) geschickt. Dieser bildet die \SI{20}{\bit} auf ein einzelnes \si{\bit} der Chiffrefolge ab. Anschließend schiebt das \gls{lfsr} seinen Inhalt um ein \si{\bit} nach links und erzeugt mittels des Generatorpolynoms die frei werdende \si{\bit} Stelle rechts. Das Generatorpolynom ist gegeben durch
+Wie in~\cite{Verdult2015} beschrieben basiert die Chiffre auf einem \SI{48}{\bit} breiten \gls{lfsr} und einem nicht-linearen Filter \(f\). Mit jedem Takt werden \SI{20}{\bit} des \gls{lfsr} durch den Filter \(f\) geschickt. Dieser bildet die \SI{20}{\bit} auf ein einzelnes Bit der Chiffrefolge ab. Anschließend schiebt das \gls{lfsr} seinen Inhalt um \SI{1}{\bit} nach links und erzeugt mittels des Generatorpolynoms die frei werdende Bit-Stelle rechts. Das Generatorpolynom ist gegeben durch
 %
 \begin{equation*}
     \setlength\arraycolsep{1pt}
